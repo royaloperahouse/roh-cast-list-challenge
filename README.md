@@ -1,4 +1,4 @@
-# cast-builder-challenge
+# Cast List Challenge
 
 Dev challenge to build a tool for the ROH
 
@@ -14,7 +14,7 @@ Create a simple app that display the:
 -   `title`
 -   `shortDescription`
 -   List of `creatives` associated with the `productions`
-    \*\* Their `name`s and `role`s
+    -   Their `name`s and `role`s
 -   List of Cast Member (`castRoles`) for the performance (`activities`)
 
 #### Production Information
@@ -30,7 +30,7 @@ Create a simple app that display the:
 At the ROH we use the [JSON API Specification](https://jsonapi.org/) to define our api endpoints.
 The API endpoint provided above uses this spec which organises the information in data objects
 with defined relationships. For the ROH Event Details object this means the `event-detail` object
-relates to a `productions` and `runs` object which in turn relate to `creatives` and `activities`
+relates to `productions` and `runs` objects which in turn relate to `creatives` and `activities`
 objects.
 
 We use the term Production to refer to an Opera or Ballet that can be repeated in many Runs. The
