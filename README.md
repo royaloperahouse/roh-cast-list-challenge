@@ -4,18 +4,18 @@ Dev challenge to build a tool for the ROH
 
 ## Setup
 
-The Royal opera house needs a custom cast sheet generated for just one one performance of an
+The Royal Opera House (ROH) needs a custom cast sheet generated for just one one performance of an
 upcoming production. Please follow these instructions to complete the task.
 
 ### Instructions
 
-Create a simple app that display the:
+Create a simple app that displays the:
 
 -   `title`
 -   `shortDescription`
 -   List of `creatives` associated with the `productions`
     -   Their `name`s and `role`s
--   List of Cast Member (`castRoles`) for the performance (`activities`)
+-   List of cast members (`castRoles`) for the performance (`activities`)
 
 #### Production Information
 
@@ -24,6 +24,10 @@ Create a simple app that display the:
 | Production       | Turandot                                                                |
 | Performance Date | 10/03/2023                                                              |
 | API Endpoint     | https://www.roh.org.uk/api/event-details?slug=turandot-by-andrei-serban |
+
+#### Example design
+
+![Example Design](/images/cast-list-challenge.png "Example Design")
 
 ## Technical Background
 
