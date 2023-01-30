@@ -8,9 +8,8 @@ import {
 } from "./helpers/helpers";
 
 const GetCastSheet = () => {
-  const [castSheet, SetCastSheet] = useState([]);
   const [title, setTitle] = useState("");
-  const [castMembers, setCastMembers] = useState([]);
+  const [cast, setCast] = useState([]);
   const [creatives, setCreatives] = useState([]);
   const [shortDescription, setShortDescription] = useState("");
 
@@ -25,27 +24,19 @@ const GetCastSheet = () => {
 
         setTitle(getTitle(data));
         setShortDescription(getShortDescription(data));
-        console.log("setCreatives only gets calaled once");
         setCreatives(getCreatives(data));
-        setCastMembers(getCast(data));
-
-        // let IDs = getCastIDs(getActivity(data));
-        // setCastMembers(getCastMembers(data, IDs));
-        // let creativesIDs = getCreativesIDs(data);
-        // setCreatives(getCreatives(data, creativesIDs));
-        // SetCastSheet(data);
-        console.log("this is data", data);
+        setCast(getCast(data));
 
         return data;
       } catch (e) {
         console.log(e);
-        alert("not connected to the browser");
+        alert("failed to fetch data");
       }
     })();
   }, []);
   return {
     title: title,
-    castMembers: castMembers,
+    cast: cast,
     creatives: creatives,
     shortDescription: shortDescription,
   };

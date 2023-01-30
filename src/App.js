@@ -1,13 +1,6 @@
-import { useState, useEffect } from "react";
 import GetCastSheet from "./getCastSheet";
 import { Heading, Text, VStack } from "@chakra-ui/react";
-import {
-  List,
-  ListItem,
-  ListIcon,
-  OrderedList,
-  UnorderedList,
-} from "@chakra-ui/react";
+import { ListItem, UnorderedList } from "@chakra-ui/react";
 
 function App() {
   let sheet = GetCastSheet();
@@ -31,7 +24,7 @@ function App() {
       </UnorderedList>
       <Heading>Cast</Heading>
       <UnorderedList>
-        {sheet.castMembers.map((item) => {
+        {sheet.cast.map((item) => {
           return (
             <ListItem>
               {item.role} : {item.name}
