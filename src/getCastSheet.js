@@ -4,6 +4,8 @@ const GetCastSheet = () => {
   const [castSheet, SetCastSheet] = useState([]);
   const [title, setTitle] = useState("");
   const [castMembers, setCastMembers] = useState({});
+  const [creatives, setCreatives] = useState([]);
+  const [shortDescription, setShortDescription] = useState("");
 
   function getTitle(obj) {
     setTitle(obj.data.attributes.title);
@@ -43,13 +45,32 @@ const GetCastSheet = () => {
   }
 
   function getCreatives(obj) {
-    let productionID = obj.relationships.productions.data[0].id;
+    let productionID = obj.data.relationships.productions.data[0].id;
+    // console.log("production ID: ", productionID);
     let production = obj.included.find((item) => item.id === productionID);
+    // console.log("production: ", production);
     let creativesIDs = [];
     for (let creative of production.relationships.creatives.data) {
-      creativesIDs.push(creative.ID);
+      creativesIDs.push(creative.id);
     }
-    let creatives = {};
+    let creatives = [];
+    for (let item of obj.included) {
+      for (let ID of creativesIDs) {
+        if (item.id === ID) {
+          creatives.push({
+            role: item.attributes.role,
+            name: item.attributes.name,
+          });
+        }
+      }
+    }
+    // console.log("here are the creatives: ", creatives);
+    return creatives;
+  }
+
+  function getShortDescription(obj) {
+    let shortDescription = obj.data.attributes.shortDescription;
+    return shortDescription;
   }
   useEffect(() => {
     (async function getCastSheet() {
@@ -62,8 +83,9 @@ const GetCastSheet = () => {
         getTitle(data);
         let IDs = getCastIDs(getActivity(data));
         setCastMembers(getCastMembers(data, IDs));
-
+        setCreatives(getCreatives(data));
         SetCastSheet(data);
+        setShortDescription(getShortDescription(data));
         console.log("this is data", data);
 
         return data;
@@ -73,7 +95,12 @@ const GetCastSheet = () => {
       }
     })();
   }, []);
-  return { title: title, castMembers: castMembers };
+  return {
+    title: title,
+    castMembers: castMembers,
+    creatives: creatives,
+    shortDescription: shortDescription,
+  };
 };
 
 export default GetCastSheet;
