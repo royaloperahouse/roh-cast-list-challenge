@@ -3,7 +3,7 @@ import { useState, useEffect, React } from "react";
 const GetCastSheet = () => {
   const [castSheet, SetCastSheet] = useState([]);
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
+  const [castMembers, setCastMembers] = useState({});
 
   function getTitle(obj) {
     setTitle(obj.data.attributes.title);
@@ -14,11 +14,43 @@ const GetCastSheet = () => {
     let activity = arr.find(
       (item) => item.attributes.date === "2023-03-10T19:00:00+00:00"
     );
-    let activityID = activity.id;
-    console.log("activityID in question", activityID);
-    // console.log("activity array", activity);
+    // let activityID = activity.id;
+    return activity;
   }
 
+  function getCastIDs(activity) {
+    let castIDs = [];
+    for (let castRole of activity.relationships.cast.data) {
+      castIDs.push(castRole.id);
+    }
+    console.log("here are cast IDs", castIDs);
+    return castIDs;
+  }
+  function getCastMembers(obj, IDs) {
+    let castRoles = [];
+    for (let item of obj.included) {
+      for (let ID of IDs) {
+        if (item.id === ID) {
+          castRoles.push({
+            role: item.attributes.role,
+            name: item.attributes.name,
+          });
+        }
+      }
+    }
+    console.log(castRoles);
+    return castRoles;
+  }
+
+  function getCreatives(obj) {
+    let productionID = obj.relationships.productions.data[0].id;
+    let production = obj.included.find((item) => item.id === productionID);
+    let creativesIDs = [];
+    for (let creative of production.relationships.creatives.data) {
+      creativesIDs.push(creative.ID);
+    }
+    let creatives = {};
+  }
   useEffect(() => {
     (async function getCastSheet() {
       try {
@@ -27,9 +59,11 @@ const GetCastSheet = () => {
         );
         const data = await fetchResponse.json();
 
-        SetCastSheet(data);
         getTitle(data);
-        getActivity(data);
+        let IDs = getCastIDs(getActivity(data));
+        setCastMembers(getCastMembers(data, IDs));
+
+        SetCastSheet(data);
         console.log("this is data", data);
 
         return data;
@@ -39,7 +73,7 @@ const GetCastSheet = () => {
       }
     })();
   }, []);
-  return `this is the title: ${title}`;
+  return { title: title, castMembers: castMembers };
 };
 
 export default GetCastSheet;
@@ -50,11 +84,14 @@ CREATIVES: obj.included[id:2606].creatives.data
 DATE: obj.included.[id = 51318].relationships.activities.data[id=51382]
 
 GENERAL PLAN:
-1. Obtain ID of Activity we're interested in. 
+1. Obtain ID of Activity we're interested in. ✅
     obj.included[?].attributes.date = 2023-03-10T19:00:00+00:00
-    obj.included[?].id
-2. Go down and obtain Cast members
+    obj.included[?].id 
+2. Go down and obtain Cast members ✅
 3. Go up to Run and obtain Creatives
+---
+4. Obtain short description
+
 
 
 
