@@ -4,16 +4,16 @@ import { getCast, getCreatives } from "./getPeople/getPeople";
 import getTitle from "./getTitle";
 import getShortDescription from "./getShortDescription";
 
-const GetCastSheet = () => {
+const useCastSheet = () => {
   const [title, setTitle] = useState("");
   const [cast, setCast] = useState([]);
   const [creatives, setCreatives] = useState([]);
   const [shortDescription, setShortDescription] = useState("");
+  const [castSheet, setCastSheet] = useState({});
 
   useEffect(() => {
     (async function getCastSheet() {
       try {
-        console.log("fetch also gets calledo nce");
         const fetchResponse = await fetch(
           `http://localhost:8080/https://www.roh.org.uk/api/event-details?slug=turandot-by-andrei-serban`
         );
@@ -23,6 +23,12 @@ const GetCastSheet = () => {
         setShortDescription(getShortDescription(data));
         setCreatives(getCreatives(data));
         setCast(getCast(data));
+        // setCastSheet({
+        //   title: getTitle(data),
+        //   shortDescription: getShortDescription(data),
+        //   creatives: getCreatives(data),
+        //   cast: getCast(data),
+        // });
 
         return data;
       } catch (e) {
@@ -37,6 +43,7 @@ const GetCastSheet = () => {
     creatives: creatives,
     shortDescription: shortDescription,
   };
+  // return castSheet;
 };
 
-export default GetCastSheet;
+export default useCastSheet;

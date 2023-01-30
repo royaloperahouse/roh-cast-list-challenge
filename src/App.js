@@ -1,9 +1,10 @@
-import GetCastSheet from "./getCastSheet";
-import { Heading, Text, VStack } from "@chakra-ui/react";
+import useCastSheet from "./getCastSheet";
+import { Heading, Text, VStack, Box } from "@chakra-ui/react";
 import { ListItem, UnorderedList } from "@chakra-ui/react";
+import PeopleList from "./List.js";
 
 function App() {
-  let sheet = GetCastSheet();
+  let sheet = useCastSheet();
   console.log("here's da sheet: ", sheet);
 
   return (
