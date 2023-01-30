@@ -9,26 +9,20 @@ const useCastSheet = () => {
   const [cast, setCast] = useState([]);
   const [creatives, setCreatives] = useState([]);
   const [shortDescription, setShortDescription] = useState("");
-  const [castSheet, setCastSheet] = useState({});
 
   useEffect(() => {
     (async function getCastSheet() {
       try {
         const fetchResponse = await fetch(
-          `http://localhost:8080/https://www.roh.org.uk/api/event-details?slug=turandot-by-andrei-serban`
+          "http://localhost:8080/https://www.roh.org.uk/api/event-details?slug=turandot-by-andrei-serban"
         );
         const data = await fetchResponse.json();
+        console.log(data);
 
         setTitle(getTitle(data));
         setShortDescription(getShortDescription(data));
         setCreatives(getCreatives(data));
         setCast(getCast(data));
-        // setCastSheet({
-        //   title: getTitle(data),
-        //   shortDescription: getShortDescription(data),
-        //   creatives: getCreatives(data),
-        //   cast: getCast(data),
-        // });
 
         return data;
       } catch (e) {
@@ -43,7 +37,6 @@ const useCastSheet = () => {
     creatives: creatives,
     shortDescription: shortDescription,
   };
-  // return castSheet;
 };
 
 export default useCastSheet;
