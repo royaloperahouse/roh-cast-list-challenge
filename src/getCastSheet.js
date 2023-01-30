@@ -1,4 +1,13 @@
 import { useState, useEffect, React } from "react";
+import {
+  getTitle,
+  getActivity,
+  getCastIDs,
+  getCastMembers,
+  getCreativesIDs,
+  getCreatives,
+  getShortDescription,
+} from "./helpers/helpers";
 
 const GetCastSheet = () => {
   const [castSheet, SetCastSheet] = useState([]);
@@ -7,79 +16,6 @@ const GetCastSheet = () => {
   const [creatives, setCreatives] = useState([]);
   const [shortDescription, setShortDescription] = useState("");
 
-  function getTitle(obj) {
-    setTitle(obj.data.attributes.title);
-  }
-  function getActivity(obj) {
-    let arr = obj.included;
-    //.find returns the first instance which meets the criteria. This is fine as there will only be one activity/performance for a given date.
-    let activity = arr.find(
-      (item) => item.attributes.date === "2023-03-10T19:00:00+00:00"
-    );
-    // let activityID = activity.id;
-    return activity;
-  }
-
-  function getCastIDs(activity) {
-    let castIDs = [];
-    for (let castRole of activity.relationships.cast.data) {
-      castIDs.push(castRole.id);
-    }
-    console.log("here are cast IDs", castIDs);
-    return castIDs;
-  }
-  function getCastMembers(obj, IDs) {
-    let castRoles = [];
-    for (let item of obj.included) {
-      for (let ID of IDs) {
-        if (item.id === ID) {
-          castRoles.push({
-            role: item.attributes.role,
-            name: item.attributes.name,
-          });
-        }
-      }
-    }
-    console.log(castRoles);
-    return castRoles;
-  }
-
-  function getCreatives(obj) {
-    let productionID = obj.data.relationships.productions.data[0].id;
-    // console.log("production ID: ", productionID);
-    let production = obj.included.find((item) => item.id === productionID);
-    // console.log("production: ", production);
-    let creativesIDs = [];
-    for (let creative of production.relationships.creatives.data) {
-      creativesIDs.push(creative.id);
-    }
-    let creatives = [];
-    for (let item of obj.included) {
-      for (let ID of creativesIDs) {
-        if (item.id === ID) {
-          creatives.push({
-            role: item.attributes.role,
-            name: item.attributes.name,
-          });
-        }
-      }
-    }
-    // console.log("here are the creatives: ", creatives);
-    return creatives;
-  }
-
-  function getShortDescription(obj) {
-    let shortDescription = obj.data.attributes.shortDescription;
-    let openingTagIndex = shortDescription.indexOf("<p>");
-    if (openingTagIndex > -1) {
-      shortDescription = shortDescription.slice(openingTagIndex + 3);
-    }
-    let closingTagIndex = shortDescription.indexOf("</p>");
-    if (closingTagIndex > -1) {
-      shortDescription = shortDescription.slice(0, closingTagIndex);
-    }
-    return shortDescription;
-  }
   useEffect(() => {
     (async function getCastSheet() {
       try {
@@ -88,10 +24,11 @@ const GetCastSheet = () => {
         );
         const data = await fetchResponse.json();
 
-        getTitle(data);
+        setTitle(getTitle(data));
         let IDs = getCastIDs(getActivity(data));
         setCastMembers(getCastMembers(data, IDs));
-        setCreatives(getCreatives(data));
+        let creativesIDs = getCreativesIDs(data);
+        setCreatives(getCreatives(data, creativesIDs));
         SetCastSheet(data);
         setShortDescription(getShortDescription(data));
         console.log("this is data", data);
