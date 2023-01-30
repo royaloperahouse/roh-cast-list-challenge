@@ -10,11 +10,13 @@ const GetCastSheet = () => {
   }
   function getActivity(obj) {
     let arr = obj.included;
-    let activity = arr.filter(
-      (item) => (item.attributes.date = "2023-03-10T19:00:00+00:00")
+    //.find returns the first instance which meets the criteria. This is fine as there will only be one activity/performance for a given date.
+    let activity = arr.find(
+      (item) => item.attributes.date === "2023-03-10T19:00:00+00:00"
     );
     let activityID = activity.id;
     console.log("activityID in question", activityID);
+    // console.log("activity array", activity);
   }
 
   useEffect(() => {
@@ -27,6 +29,7 @@ const GetCastSheet = () => {
 
         SetCastSheet(data);
         getTitle(data);
+        getActivity(data);
         console.log("this is data", data);
 
         return data;
