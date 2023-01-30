@@ -2,9 +2,7 @@ import { useState, useEffect, React } from "react";
 import {
   getTitle,
   getActivity,
-  getCastIDs,
-  getCastMembers,
-  getCreativesIDs,
+  getCast,
   getCreatives,
   getShortDescription,
 } from "./helpers/helpers";
@@ -19,18 +17,23 @@ const GetCastSheet = () => {
   useEffect(() => {
     (async function getCastSheet() {
       try {
+        console.log("fetch also gets calledo nce");
         const fetchResponse = await fetch(
           `http://localhost:8080/https://www.roh.org.uk/api/event-details?slug=turandot-by-andrei-serban`
         );
         const data = await fetchResponse.json();
 
         setTitle(getTitle(data));
-        let IDs = getCastIDs(getActivity(data));
-        setCastMembers(getCastMembers(data, IDs));
-        let creativesIDs = getCreativesIDs(data);
-        setCreatives(getCreatives(data, creativesIDs));
-        SetCastSheet(data);
         setShortDescription(getShortDescription(data));
+        console.log("setCreatives only gets calaled once");
+        setCreatives(getCreatives(data));
+        setCastMembers(getCast(data));
+
+        // let IDs = getCastIDs(getActivity(data));
+        // setCastMembers(getCastMembers(data, IDs));
+        // let creativesIDs = getCreativesIDs(data);
+        // setCreatives(getCreatives(data, creativesIDs));
+        // SetCastSheet(data);
         console.log("this is data", data);
 
         return data;

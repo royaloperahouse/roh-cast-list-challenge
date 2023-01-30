@@ -30,61 +30,96 @@ function getActivity(obj) {
   return activity;
 }
 
-function getCastIDs(activity) {
-  let castIDs = [];
-  for (let castRole of activity.relationships.cast.data) {
-    castIDs.push(castRole.id);
-  }
-  console.log("here are cast IDs", castIDs);
-  return castIDs;
+function getProduction(obj) {
+  let productionID = obj.data.relationships.productions.data[0].id;
+  console.log("production id is: ", productionID);
+  let production = obj.included.find((item) => item.id === productionID);
+  return production;
 }
-function getCastMembers(obj, IDs) {
-  let castRoles = [];
+
+function getIDs(obj, what) {
+  let IDs = [];
+  for (let item of obj.relationships[what].data) {
+    IDs.push(item.id);
+  }
+  return IDs;
+}
+
+function getPeople(obj, IDs) {
+  let people = [];
   for (let item of obj.included) {
     for (let ID of IDs) {
       if (item.id === ID) {
-        castRoles.push({
+        people.push({
           role: item.attributes.role,
           name: item.attributes.name,
         });
       }
     }
   }
-  console.log(castRoles);
-  return castRoles;
-}
-function getCreativesIDs(obj) {
-  let productionID = obj.data.relationships.productions.data[0].id;
-  let production = obj.included.find((item) => item.id === productionID);
-  let creativesIDs = [];
-  for (let creative of production.relationships.creatives.data) {
-    creativesIDs.push(creative.id);
-  }
-  return creativesIDs;
+  return people;
 }
 
-function getCreatives(obj, creativesIDs) {
-  let creatives = [];
-  for (let item of obj.included) {
-    for (let ID of creativesIDs) {
-      if (item.id === ID) {
-        creatives.push({
-          role: item.attributes.role,
-          name: item.attributes.name,
-        });
-      }
-    }
-  }
-  // console.log("here are the creatives: ", creatives);
+function getCast(obj) {
+  let activity = getActivity(obj);
+  let castIDs = getIDs(activity, "cast");
+  let cast = getPeople(obj, castIDs);
+  return cast;
+}
+
+function getCreatives(obj) {
+  console.log("top of getCreatives");
+  let production = getProduction(obj);
+  let creativesIDs = getIDs(production, "creatives");
+  let creatives = getPeople(obj, creativesIDs);
   return creatives;
 }
 
-export {
-  getTitle,
-  getActivity,
-  getCastIDs,
-  getCastMembers,
-  getCreativesIDs,
-  getCreatives,
-  getShortDescription,
-};
+// function getCastIDs(activity) {
+//   let castIDs = [];
+//   for (let castRole of activity.relationships.cast.data) {
+//     castIDs.push(castRole.id);
+//   }
+//   return castIDs;
+// }
+
+// function getCreativesIDs(obj) {
+//   let creativesIDs = [];
+//   for (let creative of production.relationships.creatives.data) {
+//     creativesIDs.push(creative.id);
+//   }
+//   return creativesIDs;
+// }
+// function getCastMembers(obj, IDs) {
+//   let castRoles = [];
+//   for (let item of obj.included) {
+//     for (let ID of IDs) {
+//       if (item.id === ID) {
+//         castRoles.push({
+//           role: item.attributes.role,
+//           name: item.attributes.name,
+//         });
+//       }
+//     }
+//   }
+//   console.log(castRoles);
+//   return castRoles;
+// }
+
+// function getCreatives(obj, creativesIDs) {
+//   let creatives = [];
+//   for (let item of obj.included) {
+//     for (let ID of creativesIDs) {
+//       if (item.id === ID) {
+//         creatives.push({
+//           role: item.attributes.role,
+//           name: item.attributes.name,
+//         });
+//       }
+//     }
+//   }
+//   // console.log("here are the creatives: ", creatives);
+//   return creatives;
+// }
+
+export { getTitle, getCast, getCreatives, getShortDescription };
