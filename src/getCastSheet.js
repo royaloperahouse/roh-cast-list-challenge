@@ -3,7 +3,7 @@ import { useState, useEffect, React } from "react";
 const GetCastSheet = () => {
   const [castSheet, SetCastSheet] = useState([]);
   const [title, setTitle] = useState("");
-  const [castMembers, setCastMembers] = useState({});
+  const [castMembers, setCastMembers] = useState([]);
   const [creatives, setCreatives] = useState([]);
   const [shortDescription, setShortDescription] = useState("");
 
@@ -70,6 +70,14 @@ const GetCastSheet = () => {
 
   function getShortDescription(obj) {
     let shortDescription = obj.data.attributes.shortDescription;
+    let openingTagIndex = shortDescription.indexOf("<p>");
+    if (openingTagIndex > -1) {
+      shortDescription = shortDescription.slice(openingTagIndex + 3);
+    }
+    let closingTagIndex = shortDescription.indexOf("</p>");
+    if (closingTagIndex > -1) {
+      shortDescription = shortDescription.slice(0, closingTagIndex);
+    }
     return shortDescription;
   }
   useEffect(() => {
